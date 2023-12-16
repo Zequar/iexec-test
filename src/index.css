@@ -1,0 +1,113 @@
+.navbar {
+  background-color: #0d0d1280;
+  border-bottom: solid 1px #30303866;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  color: #fff;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 32px;
+}
+
+button {
+  background-color: #fcd15a;
+  padding: 8px 16px;
+  color: #000;
+  border-radius: 8px;
+}
+
+.address {
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: #1d1d24;
+  color: #fcd15a;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.address img {
+  height: 16px;
+}
+
+.logout {
+  height: 20px;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 42px;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.text-yellow {
+  color: #fcd15a;
+}
+
+.frame {
+  border-radius: 20px;
+  width: 400px;
+  padding: 40px;
+  word-wrap: break-word;
+  background: linear-gradient(to bottom, #ffffff0f, #30303810);
+  border: 1px solid rgba(130, 130, 142, 1);
+}
+
+input {
+  color: #fff;
+  background-color: rgba(29, 29, 36, 1);
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+input::placeholder {
+ color: rgba(163, 163, 168, 1); 
+}
+
+.button {
+  background-color: #fcd15a;
+  padding: 8px 16px;
+  color: #000;
+  border-radius: 8px;
+}
+
+label {
+  font-size: 14px;
+  line-height: 21px;
+}
+
+body {
+  background-image: url("./assets/background.jpg"); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+}
+
+.protected-data-frame {
+  background: 
+    linear-gradient(#1D1D24 0 0) padding-box, /*this is your grey background*/
+    linear-gradient(135deg, #1D1D24, #1D1D2400, #3F0D3F,#CE2C68, #FCD15A) border-box;
+  color: #fff;
+  padding: 24px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  display: inline-block;
+}
