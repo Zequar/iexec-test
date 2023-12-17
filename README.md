@@ -1,4 +1,24 @@
-﻿# **iExec Test Dev frontend [draft]**
+# iExec Frontend Technical Test
+
+Hello Pierre, Cédric & Francis,
+Welcome to the repository of my technical test for the iExec Frontend Developer Position.
+
+Below will be found the initial demand.
+
+On top of the initial topic, I decided to integrate a few bonuses to dive deeper into the usage of DataProtector and enhance the UX, which was described in a limited way in Figma. (Though great design!)
+
+Here are a few of the bonuses :
+- Using fetchGrantedAccess() to indicate to the user which of his email addresses are already granted permission to the target address.
+- Using revokeOneAccess() to individually remove accesses from the target address.
+- Toggle button to close the email protection data adding form.
+- Error handling with window.alert() whenever something's wrong with requests to DataProtector
+- Automatic MetaMask network switch if detected on another network
+
+Enjoy code reviewing !
+
+ ---
+ 
+ # **iExec Test Dev frontend [draft]**
 
 [Context ](#_page0_x72.00_y322.91)[Deliverable ](#_page0_x72.00_y455.34)[User stories](#_page1_x72.00_y115.64)
 
