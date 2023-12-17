@@ -1,6 +1,7 @@
 :root {
   --x: 0%;
   --gradient-angle: 135deg;
+  font-family: 'Mulish', sans-serif;
 }
 
 h1 {
@@ -120,4 +121,11 @@ body {
 
 .text-gray {
   color: #82828E
+}
+
+.logoFont {
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  font-weight: 700px;
+  line-height: 20px;
 }

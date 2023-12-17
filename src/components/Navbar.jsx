@@ -46,7 +46,7 @@ const Navbar = ({ setAccount, account, handleConnect }) => {
     <StyledNavbar className="navbar">
       <div className="flex horizontal gap-3 items-center">
         <LogoImg src={Logo} alt="Logo iExec" />
-        <p>Secret Email</p>
+        <p className="logoFont">Secret Email</p>
       </div>
 
       {account != "" ? (
