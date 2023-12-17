@@ -1,14 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 
 const AddEmailForm = ({
-  submitHandler,
-  changeFormHandler,
-  formData,
-  isLoading,
+  dataProtector,
+  fetchData,
+  setIsOpenForm
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
+
+  const handleProtectData = async (e) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      await dataProtector.protectData({
+        data: {
+          email: formData.email,
+        },
+        name: formData.name,
+      });
+      fetchData();
+      setIsOpenForm(false);
+      window.alert('Successfully pushed ' + formData.name)
+    } catch (error) {
+      window.alert(error.message + '\nPlease Select iExec Sidechain network on MetaMask')
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleChangeForm = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={handleProtectData}>
       <p>
         Protect your address with iExec. Your email address stays secret, only
         your name will be shared with the organization.
@@ -21,7 +56,7 @@ const AddEmailForm = ({
             id="email"
             name="email"
             value={formData.email}
-            onChange={changeFormHandler}
+            onChange={handleChangeForm}
             required
             placeholder="johndoe@gmail.com"
           />
@@ -34,7 +69,7 @@ const AddEmailForm = ({
             id="name"
             name="name"
             value={formData.name}
-            onChange={changeFormHandler}
+            onChange={handleChangeForm}
             placeholder="John Doe"
             required
           />
@@ -43,7 +78,7 @@ const AddEmailForm = ({
         <Button
           type="button"
           innerHTML={isLoading ? "Initializing..." : "Protect my Address"}
-          onClickHandler={submitHandler}
+          onClickHandler={handleProtectData}
           isLoading={isLoading}
         />
       </div>
