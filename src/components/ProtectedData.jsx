@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
 
-const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
+const ProtectedData = ({ myProtectedData, grantedAccesses, setSelectedDataAddress, dataProtector }) => {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
 
   let element = document.querySelector(".data-selected")
@@ -40,11 +40,7 @@ const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
   useEffect(() => {
     element = document.querySelector(".data-selected")
     startAnimating()
-
-  
   }, []);
-
-
 
   return (
     <ul className="flex flex-col gap-4 w-full">
@@ -65,6 +61,11 @@ const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
           <div>
             <p className="font-bold">{item.name}</p>
             <p className="italic">**email protected**</p>
+            {
+              grantedAccesses[index] && 
+              <p className="text-gray-600">Already Granted ✓</p>
+            }
+
           </div>
         </li>
       ))}

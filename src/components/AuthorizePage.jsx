@@ -24,9 +24,27 @@ function AuthorizePage() {
 
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [myProtectedData, setMyProtectedData] = useState([]);
+  const [grantedAccesses, setGrantedAccesses] = useState([])
 
   const [selectedDataAddress, setSelectedDataAddress] = useState(null);
 
+  useEffect(() => {
+    if (!account) return
+    async function getGranted() {
+      let granted = []
+      for (let i = 0; i != myProtectedData.length; i++) {
+        let grantedAccess = await dataProtector.fetchGrantedAccess({
+          protectedData: myProtectedData[i].address,
+          authorizedApp: WEB3MAIL_APP_ENS,
+          authorizedUser: companyAddress,
+        });
+        granted.push(grantedAccess.count == 1)
+      }
+      setGrantedAccesses(granted)
+    }
+
+    getGranted()
+  }, [myProtectedData])
 
   const fetchData = () => {
     dataProtector
@@ -34,7 +52,11 @@ function AuthorizePage() {
         owner: account,
       })
       .then((result) => {
+
         setMyProtectedData(result);
+
+        console.log(result)
+        // select the first element by default
         setSelectedDataAddress(myProtectedData[0]?.address);
       });
   };
@@ -66,6 +88,8 @@ function AuthorizePage() {
       setIsLoading(false)
     }
   };
+
+
 
 
 
@@ -171,7 +195,10 @@ function AuthorizePage() {
                 <p>Select the one you want to grant access</p>
                 <ProtectedData
                   myProtectedData={myProtectedData}
-                  setSelectedDataAddress={setSelectedDataAddress}/>
+                  grantedAccesses={grantedAccesses}
+                  setSelectedDataAddress={setSelectedDataAddress}
+                  dataProtector={dataProtector}
+                />
                 <ToggleOpenForm isOpenForm={isOpenForm} setIsOpenForm={setIsOpenForm}/>
 
                 { !isOpenForm && 
