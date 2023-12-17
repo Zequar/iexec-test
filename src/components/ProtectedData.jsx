@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
 
-const ProtectedData = ({ myProtectedData, grantedAccesses, setSelectedDataAddress, dataProtector }) => {
+const ProtectedData = ({
+  myProtectedData,
+  grantedAccesses,
+  setSelectedDataAddress,
+  dataProtector,
+}) => {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
 
-  let element = document.querySelector(".data-selected")
+  let element = document.querySelector(".data-selected");
 
   const handleItemClick = (item, index) => {
     setSelectedDataAddress(item.address);
     setSelectedItemIndex(index);
-    element = document.querySelector(".data-selected")
+    element = document.querySelector(".data-selected");
   };
 
   const startAnimating = () => {
@@ -26,20 +31,20 @@ const ProtectedData = ({ myProtectedData, grantedAccesses, setSelectedDataAddres
       const progress = (elapsedTime % animationDuration) / animationDuration;
       const newAngle = 360 * progress;
 
-      element = document.querySelector(".data-selected")
+      element = document.querySelector(".data-selected");
       element.style.setProperty("--gradient-angle", `${newAngle}deg`);
 
       setTimeout(() => {
-        requestAnimationFrame(animate)
-      }, 16)
-    }
+        requestAnimationFrame(animate);
+      }, 16);
+    };
 
     requestAnimationFrame(animate);
-  }
+  };
 
   useEffect(() => {
-    element = document.querySelector(".data-selected")
-    startAnimating()
+    element = document.querySelector(".data-selected");
+    startAnimating();
   }, []);
 
   return (
@@ -47,9 +52,7 @@ const ProtectedData = ({ myProtectedData, grantedAccesses, setSelectedDataAddres
       {myProtectedData.map((item, index) => (
         <li
           key={index}
-          style={{
-
-          }}
+          style={{}}
           className={`protected-data-frame flex flex-col gap-1 
                       ${
                         selectedItemIndex == index
@@ -61,11 +64,9 @@ const ProtectedData = ({ myProtectedData, grantedAccesses, setSelectedDataAddres
           <div>
             <p className="font-bold">{item.name}</p>
             <p className="italic">**email protected**</p>
-            {
-              grantedAccesses[index] && 
+            {grantedAccesses[index] && (
               <p className="text-gray-600">Already Granted ✓</p>
-            }
-
+            )}
           </div>
         </li>
       ))}

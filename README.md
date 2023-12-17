@@ -41,7 +41,7 @@ The deliverable of the project is a SPA created with **React** ready to deploy w
 - the user can select a protected email among his/her protected data satisfying the data schema **{ emai l : “s t ri ng” }** (use @iexec/dataprotector fetchProtectedData)
 - the user can grant access to the selected protected data to the web3 company **user** ethereum address via the app **web3mai l . apps . i exec. et h** (use @iexec/dataprotector gantAccess)
 
- #### <a name="_page1_x72.00_y431.57"></a>As a user, I want to be able to protect my email address with iExec
+#### <a name="_page1_x72.00_y431.57"></a>As a user, I want to be able to protect my email address with iExec
 
 - the user can create a new protected data satisfying the data schema **{ emai l : “s t ri ng” }** with a custom name (use @iexec/dataprotector protectData)
 

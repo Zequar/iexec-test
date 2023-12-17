@@ -45,7 +45,7 @@ const Navbar = ({ setAccount, account, handleConnect }) => {
   return (
     <StyledNavbar className="navbar">
       <div className="flex horizontal gap-3 items-center">
-        <LogoImg src={Logo} alt="Logo iExec"/>
+        <LogoImg src={Logo} alt="Logo iExec" />
         <p>Secret Email</p>
       </div>
 
@@ -53,10 +53,14 @@ const Navbar = ({ setAccount, account, handleConnect }) => {
         <div className="flex horizontal items-center gap-3">
           <AddressWrapper>
             {account.slice(0, 5) + "..." + account.slice(38, 42)}
-            <IdenticonImg src={Icon} alt="connectedIcon"/>
+            <IdenticonImg src={Icon} alt="connectedIcon" />
           </AddressWrapper>
           <button className="bg-transparent p-0">
-            <LogoutImg src={Logout} alt="Logout" onClick={() => setAccount("")} />
+            <LogoutImg
+              src={Logout}
+              alt="Logout"
+              onClick={() => setAccount("")}
+            />
           </button>
         </div>
       ) : (

@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import Button from "./Button";
 
-const AddEmailForm = ({
-  dataProtector,
-  fetchData,
-  setIsOpenForm
-}) => {
+const AddEmailForm = ({ dataProtector, fetchData, setIsOpenForm }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -26,14 +22,16 @@ const AddEmailForm = ({
       });
       fetchData();
       setIsOpenForm(false);
-      window.alert('Successfully pushed ' + formData.name)
+      window.alert("Successfully pushed " + formData.name);
     } catch (error) {
-      window.alert(error.message + '\nPlease Select iExec Sidechain network on MetaMask')
+      window.alert(
+        error.message + "\nPlease Select iExec Sidechain network on MetaMask",
+      );
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleChangeForm = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({

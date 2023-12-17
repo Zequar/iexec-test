@@ -11,7 +11,7 @@ import { data } from "autoprefixer";
 
 function AuthorizePage() {
   const IEXEC_SIDECHAIN_ID = 134;
-  const WEB3MAIL_APP_ENS = 'web3mail.apps.iexec.eth';
+  const WEB3MAIL_APP_ENS = "web3mail.apps.iexec.eth";
   const location = useLocation();
   const IEXEC_DEFAULT_ADDRESS = "0xF048eF3d7E3B33A465E0599E641BB29421f7Df92";
   const companyAddress = new URLSearchParams(location.search).get("user");
@@ -24,27 +24,27 @@ function AuthorizePage() {
 
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [myProtectedData, setMyProtectedData] = useState([]);
-  const [grantedAccesses, setGrantedAccesses] = useState([])
+  const [grantedAccesses, setGrantedAccesses] = useState([]);
 
   const [selectedDataAddress, setSelectedDataAddress] = useState(null);
 
   useEffect(() => {
-    if (!account) return
+    if (!account) return;
     async function getGranted() {
-      let granted = []
+      let granted = [];
       for (let i = 0; i != myProtectedData.length; i++) {
         let grantedAccess = await dataProtector.fetchGrantedAccess({
           protectedData: myProtectedData[i].address,
           authorizedApp: WEB3MAIL_APP_ENS,
           authorizedUser: companyAddress,
         });
-        granted.push(grantedAccess.count == 1)
+        granted.push(grantedAccess.count == 1);
       }
-      setGrantedAccesses(granted)
+      setGrantedAccesses(granted);
     }
 
-    getGranted()
-  }, [myProtectedData])
+    getGranted();
+  }, [myProtectedData]);
 
   const fetchData = () => {
     dataProtector
@@ -52,10 +52,7 @@ function AuthorizePage() {
         owner: account,
       })
       .then((result) => {
-
         setMyProtectedData(result);
-
-        console.log(result)
         // select the first element by default
         setSelectedDataAddress(myProtectedData[0]?.address);
       });
@@ -68,30 +65,26 @@ function AuthorizePage() {
   }, [account]);
 
   const handleGrantAccess = async () => {
-    let grantedAccess;
     try {
-      setIsLoading(true)
-      grantedAccess = await dataProtector.grantAccess({
+      setIsLoading(true);
+      let grantedAccess = await dataProtector.grantAccess({
         protectedData: selectedDataAddress || myProtectedData[0].address,
         authorizedApp: WEB3MAIL_APP_ENS,
         authorizedUser: companyAddress,
       });
-      console.log(grantedAccess)
-      window.alert('granted access to' + grantedAccess.dataset)
+      fetchData()
     } catch (error) {
-      if (error.message == 'Failed to check granted access') {
-        window.alert(error.message + '\nPlease Select iExec Sidechain network on MetaMask')
+      if (error.message == "Failed to check granted access") {
+        window.alert(
+          error.message + "\nPlease Select iExec Sidechain network on MetaMask",
+        );
       } else {
-        window.alert(error.message)
+        window.alert(error.message);
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
-
-
-
-
 
   const addAndSwitchToIExecNetwork = async () => {
     await window.ethereum.request({
@@ -103,46 +96,73 @@ function AuthorizePage() {
           nativeCurrency: {
             name: "xRLC",
             symbol: "xRLC",
-            decimals: 18
+            decimals: 18,
           },
           rpcUrls: ["https://bellecour.iex.ec"],
-          blockExplorerUrls: ["https://blockscout-bellecour.iex.ec"]
-        }
-      ]
+          blockExplorerUrls: ["https://blockscout-bellecour.iex.ec"],
+        },
+      ],
     });
-    window.alert("iExec  Sidechain added to MetaMask");
 
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [
         {
-          chainId: "0x86"
-        }
-      ]
+          chainId: "0x86",
+        },
+      ],
     });
-    window.alert("MetaMask network switched to iExec Sidechain");
-  }
+  };
 
   const handleConnect = async () => {
     try {
       setIsLoading(true);
       if (!window.ethereum || !window.ethereum.isMetaMask) {
         throw Error(
-          "Please install MetaMask plugin first, visit https://metamask.io/download"
+          "Please install MetaMask plugin first, visit https://metamask.io/download",
         );
       }
       const [address] = await window.ethereum.request({
-        method: "eth_requestAccounts"
+        method: "eth_requestAccounts",
       });
-      setAccount(address)
-      
+      setAccount(address);
+
       const networkId = window.ethereum.networkVersion;
       if (networkId != IEXEC_SIDECHAIN_ID) {
-        addAndSwitchToIExecNetwork()
+        addAndSwitchToIExecNetwork();
       }
-      
     } catch (e) {
       window.alert(`Error: ${e.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRevoke = async () => {
+    try {
+      setIsLoading(true);
+      dataProtector
+        .fetchGrantedAccess({
+          protectedData: selectedDataAddress || myProtectedData[0].address,
+          authorizedApp: WEB3MAIL_APP_ENS,
+          authorizedUser: companyAddress,
+        })
+        .then(async (grantedAccess) => {
+          if (grantedAccess.count == 0) {
+            throw new Error(
+              "Can't revoke an element that hasn't been granted.",
+            );
+          }
+          try {
+            await dataProtector.revokeOneAccess(grantedAccess.grantedAccess[0]);
+            setIsLoading(false)
+            fetchData();
+          } catch (error) {
+            console.error(error);
+          }
+        });
+    } catch (error) {
+      window.alert(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -177,14 +197,27 @@ function AuthorizePage() {
             <div className="flex flex-col gap-4">
               <h2>Grant Access</h2>
               <div>
-                { companyAddress ? <><span className="text-yellow underline">{companyAddress}</span>{" "}<span>
-                would like to get access to you, using iExec secured email
-                service.
-                </span></>: <div>
-                <p>No user specified in URL</p>
-                <Link to={`/authorize?user=${IEXEC_DEFAULT_ADDRESS}`}><Button className='mt-4 w-full' innerHTML={'Try default address from iExec'}></Button></Link>
-                </div> }
-                
+                {companyAddress ? (
+                  <>
+                    <span className="text-yellow underline">
+                      {companyAddress}
+                    </span>{" "}
+                    <span>
+                      would like to get access to you, using iExec secured email
+                      service.
+                    </span>
+                  </>
+                ) : (
+                  <div>
+                    <p>No user specified in URL</p>
+                    <Link to={`/authorize?user=${IEXEC_DEFAULT_ADDRESS}`}>
+                      <Button
+                        className="mt-4 w-full"
+                        innerHTML={"Try default address from iExec"}
+                      ></Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -199,24 +232,28 @@ function AuthorizePage() {
                   setSelectedDataAddress={setSelectedDataAddress}
                   dataProtector={dataProtector}
                 />
-                <ToggleOpenForm isOpenForm={isOpenForm} setIsOpenForm={setIsOpenForm}/>
+                <ToggleOpenForm
+                  isOpenForm={isOpenForm}
+                  setIsOpenForm={setIsOpenForm}
+                />
 
-                { !isOpenForm && 
+                {!isOpenForm && (
                   <div className="flex gap-4">
-                  <button className="flex-1 bg-transparent border border-gray border-solid text-white rounded-lg px-4">
-                    Revoke Access
-                  </button>
-                  <Button
-                    className={'flex-1'}
-                    isLoading={isLoading}
-                    innerHTML={isLoading ? "Signing..." : "Share Access"}
-                    onClickHandler={handleGrantAccess}
-                  />
-                  
-                
-              </div> 
-                }
-                
+                    <button
+                      disabled={isLoading}
+                      onClick={handleRevoke}
+                      className="flex-1 bg-transparent border border-gray border-solid text-white hover:text-gray-500 rounded-lg px-4"
+                    >
+                      Revoke Access
+                    </button>
+                    <Button
+                      className={"flex-1"}
+                      isLoading={isLoading}
+                      innerHTML={isLoading ? "Signing..." : "Share Access"}
+                      onClickHandler={handleGrantAccess}
+                    />
+                  </div>
+                )}
               </div>
             )}
 

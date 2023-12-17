@@ -21,7 +21,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ onClickHandler, innerHTML, className, isLoading = false }) => {
+const Button = ({
+  onClickHandler,
+  innerHTML,
+  className,
+  isLoading = false,
+}) => {
   const [gradientPosition, setGradientPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {

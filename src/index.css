@@ -117,3 +117,7 @@ body {
       )
       border-box;
 }
+
+.text-gray {
+  color: #82828E
+}
