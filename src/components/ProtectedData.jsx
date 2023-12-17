@@ -4,7 +4,6 @@ import { throttle } from "lodash";
 const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
 
-  const elementRef = useRef(null);
   let element = document.querySelector(".data-selected")
 
   const handleItemClick = (item, index) => {
@@ -17,7 +16,6 @@ const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
     let startTime;
 
     const animate = (currentTime) => {
-      console.log('animating')
       if (!startTime) {
         startTime = currentTime;
       }
@@ -28,9 +26,12 @@ const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
       const progress = (elapsedTime % animationDuration) / animationDuration;
       const newAngle = 360 * progress;
 
+      element = document.querySelector(".data-selected")
       element.style.setProperty("--gradient-angle", `${newAngle}deg`);
 
-      requestAnimationFrame(animate);
+      setTimeout(() => {
+        requestAnimationFrame(animate)
+      }, 16)
     }
 
     requestAnimationFrame(animate);
@@ -53,7 +54,6 @@ const ProtectedData = ({ myProtectedData, setSelectedDataAddress }) => {
           style={{
 
           }}
-          ref={selectedItemIndex == index ? elementRef : null}
           className={`protected-data-frame flex flex-col gap-1 
                       ${
                         selectedItemIndex == index

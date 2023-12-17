@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Plus from "./assets/plus.png";
 
 import { ethers } from "ethers";
 import { IExecDataProtector } from "@iexec/dataprotector";
@@ -8,8 +7,11 @@ import Button from "./components/Button";
 import AddEmailForm from "./components/AddEmailForm";
 import Navbar from "./components/Navbar";
 import ProtectedData from "./components/ProtectedData";
+import ToggleOpenForm from "./components/ToggleOpenForm";
 
 function App() {
+  const IEXEC_SIDECHAIN_ID = 134;
+  const WEB3MAIL_APP_ENS = 'web3mail.apps.iexec.eth';
   const web3Provider = window.ethereum;
   const companyAddress = "0xF048eF3d7E3B33A465E0599E641BB29421f7Df92";
   // instantiate
@@ -22,17 +24,10 @@ function App() {
   const [myProtectedData, setMyProtectedData] = useState([]);
 
   const [selectedDataAddress, setSelectedDataAddress] = useState(null);
-  const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
   });
-
-
-  const handleItemClick = (item, index) => {
-    setSelectedDataAddress(item.address);
-    setSelectedItemIndex(index);
-  };
 
   const fetchData = () => {
     dataProtector
@@ -40,7 +35,6 @@ function App() {
         owner: account,
       })
       .then((result) => {
-        console.log("result", result);
         setMyProtectedData(result);
         setSelectedDataAddress(myProtectedData[0]?.address);
       });
@@ -61,49 +55,64 @@ function App() {
   };
 
   const handleGrantAccess = async () => {
-    console.log(
-      "trying to grant access of",
-      selectedDataAddress,
-      "to",
-      companyAddress,
-      "from",
-      account,
-    );
-
-    const grantedAccess = await dataProtector.grantAccess({
-      protectedData: selectedDataAddress,
-      authorizedApp: "0xF048eF3d7E3B33A465E0599E641BB29421f7Df92",
-      authorizedUser: account,
-    });
-
-    console.log("granted access, ", grantedAccess);
+    let grantedAccess;
+    try {
+      setIsLoading(true)
+      grantedAccess = await dataProtector.grantAccess({
+        protectedData: selectedDataAddress || myProtectedData[0].address,
+        authorizedApp: WEB3MAIL_APP_ENS,
+        authorizedUser: companyAddress,
+      });
+      console.log(grantedAccess)
+      window.alert('granted access to' + grantedAccess.dataset)
+    } catch (error) {
+      if (error.message == 'Failed to check granted access') {
+        window.alert(error.message + '\nPlease Select iExec Sidechain network on MetaMask')
+      } else {
+        window.alert(error.message)
+      }
+    } finally {
+      setIsLoading(false)
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleProtectData = async (e) => {
     e.preventDefault();
-    console.log("Form submitting:", formData);
 
-    setIsLoading(true);
-    await dataProtector.protectData({
-      data: {
-        email: formData.email,
-      },
-      name: formData.name,
-    });
-    fetchData();
-    setIsLoading(false);
-    setIsOpenForm(false);
-    console.log("form submitted");
-    // Add your form submission logic here
+    try {
+      setIsLoading(true);
+      await dataProtector.protectData({
+        data: {
+          email: formData.email,
+        },
+        name: formData.name,
+      });
+      fetchData();
+      setIsOpenForm(false);
+      window.alert('Successfully pushed ' + formData.name)
+    } catch (error) {
+      window.alert(error.message + '\nPlease Select iExec Sidechain network on MetaMask')
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleConnect = async () => {
-    setIsLoading(true);
-    let accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    setAccount(accounts[0]);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setAccount(accounts[0]);
+      const networkId = window.ethereum.networkVersion;
+      if (networkId != IEXEC_SIDECHAIN_ID) {
+        window.alert('You succesfully connected to MetaMask, but on the wrong network. Please select iExec SideChain Network in MetaMask, otherwise protecting and granting data won\'t be available')
+      }
+    } catch (error) {
+      window.alert('Failed to connect to wallet : ' + error.message)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Detect disconnection from MetaMask
@@ -149,32 +158,20 @@ function App() {
                 <ProtectedData
                   myProtectedData={myProtectedData}
                   setSelectedDataAddress={setSelectedDataAddress}/>
-                {isOpenForm ? (
-                  <button
-                    onClick={() => setIsOpenForm(false)}
-                    className="bg-transparent m-0 p-0 flex gap-1 items-center text-white underline"
-                  >
-                    <p>Cancel adding new address</p>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setIsOpenForm(true)}
-                    className="bg-transparent m-0 p-0 flex gap-1 items-center underline text-yellow"
-                  >
-                    <img src={Plus} className="plus" />
-                    <p>Add new</p>
-                  </button>
-                )}
+                <ToggleOpenForm isOpenForm={isOpenForm} setIsOpenForm={setIsOpenForm}/>
 
                 <div className="flex gap-4">
-                  <button className="flex-1 bg-transparent border border-gray border-solid text-white">
+                  <button className="flex-1 bg-transparent border border-gray border-solid text-white rounded-lg px-4">
                     Revoke Access
                   </button>
                   <Button
-                    innerHTML={"Share Access"}
-                    className="flex-1"
+                    className={'flex-1'}
+                    isLoading={isLoading}
+                    innerHTML={isLoading ? "Signing..." : "Share Access"}
                     onClickHandler={handleGrantAccess}
                   />
+                  
+                  
                 </div>
               </div>
             )}
@@ -200,7 +197,7 @@ function App() {
               )
             ) : (
               <AddEmailForm
-                submitHandler={handleSubmit}
+                submitHandler={handleProtectData}
                 changeFormHandler={handleChangeForm}
                 formData={formData}
                 isLoading={isLoading}
