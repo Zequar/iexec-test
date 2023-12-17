@@ -1,43 +1,6 @@
-.navbar {
-  background-color: #0d0d1280;
-  border-bottom: solid 1px #30303866;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  padding: 0 32px;
-  color: #fff;
-  gap: 12px;
-  justify-content: space-between;
-}
-
-.logo {
-  height: 32px;
-}
-
-button {
-  background-color: #fcd15a;
-  padding: 8px 16px;
-  color: #000;
-  border-radius: 8px;
-}
-
-.address {
-  border-radius: 8px;
-  padding: 8px 12px;
-  background-color: #1d1d24;
-  color: #fcd15a;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.address img {
-  height: 16px;
-}
-
-.logout {
-  height: 20px;
+:root {
+  --x: 0%;
+  --gradient-angle: 135deg;
 }
 
 h1 {
@@ -50,6 +13,11 @@ h2 {
   font-weight: 700;
   font-size: 24px;
   line-height: 32px;
+}
+
+h5 {
+  font-size: 16px;
+  line-height: 24px;
 }
 
 p {
@@ -72,20 +40,24 @@ p {
 
 input {
   color: #fff;
-  background-color: rgba(29, 29, 36, 1);
+  background-color: #1d1d24;
   padding: 12px 16px;
   border-radius: 8px;
+  border: 1px solid transparent;
 }
 
 input::placeholder {
- color: rgba(163, 163, 168, 1); 
+  color: rgba(163, 163, 168, 1);
 }
 
-.button {
-  background-color: #fcd15a;
-  padding: 8px 16px;
-  color: #000;
-  border-radius: 8px;
+input:focus {
+  outline: none;
+  border: 1px solid #82828e;
+}
+
+input:hover,
+input:active {
+  border: 1px solid #82828e;
 }
 
 label {
@@ -95,19 +67,52 @@ label {
 
 body {
   background-image: url("./assets/background.jpg"); /* Replace with your image URL */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .protected-data-frame {
-  background: 
-    linear-gradient(#1D1D24 0 0) padding-box, /*this is your grey background*/
-    linear-gradient(135deg, #1D1D24, #1D1D2400, #3F0D3F,#CE2C68, #FCD15A) border-box;
+  cursor: pointer;
+  border-radius: 20px;
   color: #fff;
   padding: 24px;
-  border: 1px solid transparent;
-  border-radius: 20px;
   display: inline-block;
+}
+
+.plus {
+  height: 12px;
+}
+
+.border-gray {
+  border-color: #82828e;
+  background-color: #1d1d24;
+}
+
+.data-unselected {
+  border: solid 1px gray;
+}
+
+@keyframes rotateGradient {
+  to {
+    --gradient-angle: calc(var(--gradient-angle) + 1deg);
+  }
+}
+
+.data-selected {
+  border: 1px solid transparent;
+  animation: rotateGradient 5s linear infinite;
+  background:
+    linear-gradient(#1d1d24 0 0) padding-box,
+    /*this is your grey background*/
+      linear-gradient(
+        var(--gradient-angle),
+        #1d1d24,
+        #1d1d2400,
+        #3f0d3f,
+        #ce2c68,
+        #fcd15a
+      )
+      border-box;
 }
