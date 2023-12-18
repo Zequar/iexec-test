@@ -18,6 +18,14 @@ Enjoy code reviewing !
 
 # RUN instructions 
 
+## Prerequisites
+
+Before you begin, make sure you have the following installed on your system:
+
+- [Docker](https://docs.docker.com/get-docker/): Make sure you have Docker installed and running on your machine.
+
+## Run commands
+
 ```
 docker build -t iexec-test .
 docker run -d --rm -p 5173:5173 --name iexec-test-container iexec-test
