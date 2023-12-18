@@ -7,7 +7,6 @@ import Navbar from "./Navbar";
 import ProtectedData from "./ProtectedData";
 import ToggleOpenForm from "./ToggleOpenForm";
 import { useLocation, Link } from "react-router-dom";
-import { data } from "autoprefixer";
 
 function AuthorizePage() {
   const IEXEC_SIDECHAIN_ID = 134;
@@ -132,7 +131,9 @@ function AuthorizePage() {
         addAndSwitchToIExecNetwork();
       }
     } catch (e) {
-      window.alert(`Error: ${e.message}`);
+      if (e.message == 'Already processing eth_requestAccounts. Please wait.') {
+        window.alert('MetaMask Popup is already opened and waiting for your password. Unlock MetaMask before trying to connect with this button again.')
+      }
     } finally {
       setIsLoading(false);
     }
@@ -212,6 +213,7 @@ function AuthorizePage() {
                     <p>No user specified in URL</p>
                     <Link to={`/authorize?user=${IEXEC_DEFAULT_ADDRESS}`}>
                       <Button
+                        onClickHandler={fetchData}
                         className="mt-4 w-full"
                         innerHTML={"Try default address from iExec"}
                       ></Button>
@@ -272,7 +274,7 @@ function AuthorizePage() {
                   <p>You have no protected address yet.</p>
                   <Button
                     innerHTML={"Protect My Address"}
-                    onClickHandler={() => setIsOpenForm(true)}
+                    onClickHandler={() => { setIsOpenForm(true) }}
                   />
                 </div>
               )
