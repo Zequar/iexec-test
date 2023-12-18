@@ -11,8 +11,9 @@ Here are a few of the bonuses :
 - Using fetchGrantedAccess() to indicate to the user which of his email addresses are already granted permission to the target address.
 - Using revokeOneAccess() to individually remove accesses from the target address.
 - Toggle button to close the email protection data adding form.
-- Error handling with window.alert() whenever something's wrong with requests to DataProtector
+- A bunch of error handling, including some with window.alert() whenever something's wrong with requests to DataProtector
 - Automatic MetaMask network switch if detected on another network
+- If default path is provided, button to go to the authorize page with the default address you provided as example
 
 Enjoy code reviewing !
 
@@ -30,6 +31,8 @@ Before you begin, make sure you have the following installed on your system:
 docker build -t iexec-test .
 docker run -d --rm -p 5173:5173 --name iexec-test-container iexec-test
 ```
+
+Access website from `http://localhost:5173`
 
  ---
  
