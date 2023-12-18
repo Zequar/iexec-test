@@ -16,6 +16,13 @@ Here are a few of the bonuses :
 
 Enjoy code reviewing !
 
+# RUN instructions 
+
+```
+docker build -t iexec-test .
+docker run -d --rm -p 5173:5173 --name iexec-test-container iexec-test
+```
+
  ---
  
  # **iExec Test Dev frontend [draft]**
